@@ -2,6 +2,7 @@ package com.devsuperior.movieflix.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class Movie implements Serializable {
     private Genre genre;
     
     @OneToMany(mappedBy = "movie")
-    private List<Review> reviews;
+    private List<Review> reviews = new ArrayList<>();
     
     public Movie() {
     }
