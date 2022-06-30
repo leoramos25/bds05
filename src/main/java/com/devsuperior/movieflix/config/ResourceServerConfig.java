@@ -37,6 +37,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             http.headers().frameOptions().disable();
         
         http.authorizeRequests()
-                .anyRequest().permitAll();
+                .antMatchers(PUBLIC_ENDPOINTS).permitAll()
+                .anyRequest().authenticated();
     }
 }
