@@ -1,19 +1,14 @@
-package com.devsuperior.movieflix.entities;
+package com.devsuperior.movieflix.dtos;
 
-import javax.persistence.*;
+import com.devsuperior.movieflix.entities.Genre;
+import com.devsuperior.movieflix.entities.Movie;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-@Entity
-@Table(name = "tb_movie")
-public class Movie implements Serializable {
+public class MovieDTO implements Serializable {
     
-    private static final long serialVersionUID = 8547505925796247682L;
+    private static final long serialVersionUID = -3045880719485241434L;
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     private String title;
@@ -23,27 +18,31 @@ public class Movie implements Serializable {
     private Integer year;
     
     private String imgUrl;
-    @Column(columnDefinition = "TEXT")
+    
     private String synopsis;
     
-    @ManyToOne
-    @JoinColumn(name = "genre_id")
-    private Genre genre;
+    private GenreDTO genre;
     
-    @OneToMany(mappedBy = "movie")
-    private List<Review> reviews = new ArrayList<>();
-    
-    public Movie() {
+    public MovieDTO() {
     }
     
-    public Movie(Long id, String title, String subTitle, Integer year, String imgUrl, String synopsis, Genre genre) {
+    public MovieDTO(Long id, String title, String subTitle, Integer year, String imgUrl, String synopsis) {
         this.id = id;
         this.title = title;
         this.subTitle = subTitle;
         this.year = year;
         this.imgUrl = imgUrl;
         this.synopsis = synopsis;
-        this.genre = genre;
+    }
+    
+    public MovieDTO(Movie entity, Genre genre) {
+        id = entity.getId();
+        title = entity.getTitle();
+        subTitle = entity.getSubTitle();
+        year = entity.getYear();
+        imgUrl = entity.getImgUrl();
+        synopsis = entity.getSynopsis();
+        this.genre = new GenreDTO(genre);
     }
     
     public Long getId() {
@@ -94,28 +93,7 @@ public class Movie implements Serializable {
         this.synopsis = synopsis;
     }
     
-    public Genre getGenre() {
+    public GenreDTO getGenre() {
         return genre;
-    }
-    
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-    
-    public List<Review> getReviews() {
-        return reviews;
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Movie movie = (Movie) o;
-        return getId().equals(movie.getId());
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
     }
 }

@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService implements UserDetailsService {
     
-    private static final String ENTITY_NOT_FOUND = "Entity not found";
-    
     @Autowired
     private UserRepository userRepository;
     

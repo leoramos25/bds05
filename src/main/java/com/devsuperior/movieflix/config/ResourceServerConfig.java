@@ -15,7 +15,7 @@ import java.util.Arrays;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     
-    private final static String[] PUBLIC_ENDPOINTS = {
+    private static final String[] PUBLIC_ENDPOINTS = {
             "/oauth/token",
             "/h2-console/**"
     };

@@ -2,11 +2,14 @@ package com.devsuperior.movieflix.controllers.exceptions.handlers;
 
 import com.devsuperior.movieflix.controllers.exceptions.OAuthCustomError;
 import com.devsuperior.movieflix.controllers.exceptions.StandardError;
+import com.devsuperior.movieflix.controllers.exceptions.ValidationError;
 import com.devsuperior.movieflix.services.exceptions.ForbiddenException;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
 import com.devsuperior.movieflix.services.exceptions.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -42,6 +45,24 @@ public class ControllerExceptionHandler {
         error.setError("Resource not found");
         error.setMessage(exception.getMessage());
         error.setPath(request.getRequestURI());
+        
+        return ResponseEntity.status(status).body(error);
+    }
+    
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationError> argumentNotValid(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        var status = HttpStatus.UNPROCESSABLE_ENTITY;
+        var error = new ValidationError();
+        
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Validation exception");
+        error.setMessage(exception.getMessage());
+        error.setPath(request.getRequestURI());
+        
+        for (FieldError fieldError : exception.getBindingResult().getFieldErrors()) {
+            error.addError(fieldError.getField(), fieldError.getDefaultMessage());
+        }
         
         return ResponseEntity.status(status).body(error);
     }
